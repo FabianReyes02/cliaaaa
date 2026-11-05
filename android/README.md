@@ -124,8 +124,9 @@ guardar un client secret.
    ```
 
 3. En **APIs used** marcar **Web API**.
-4. En **User Management** agregar el mail de la cuenta de Spotify que va a usar la app
-   (el modo desarrollo permite hasta 25 usuarios).
+4. En **Users and Access** (antes "User Management") agregar el mail de la cuenta de Spotify que va a
+   usar la app (el modo desarrollo permite hasta **5 usuarios** por app desde feb-2026).
+   La cuenta del **dueño de la app debe tener Premium activo**.
 5. Copiar el **Client ID** y pegarlo en **Ajustes → Cuenta de Spotify → Conectar con Spotify**.
 6. Completar el login en el navegador y volver a la app.
 
@@ -135,17 +136,24 @@ guardar un client secret.
 user-read-playback-state
 user-modify-playback-state
 user-read-currently-playing
-user-read-private
-user-read-email
 user-library-read
 user-library-modify
 ```
+
+> Los scopes `user-read-private` y `user-read-email` se eliminaron porque Spotify
+> (feb-2026) ya no devuelve `product` ni `email` en `GET /me` para apps nuevas.
 
 ### Notas sobre la reproducción
 
 - El **control remoto** de Spotify requiere **Premium** y un **dispositivo activo** (abrir Spotify
   en el teléfono o en la computadora y darle play una vez).
-- Con una cuenta **Free** la app sigue funcionando para buscar, ver novedades y letras.
+- **Importante (cambios de feb-2026):** para apps nuevas de desarrollo, Spotify exige que el
+  **dueño de la app tenga Premium activo**; sin él, la app deja de funcionar. Además, cada app
+  permite hasta **5 usuarios** (Users and Access).
+- Spotify eliminó `GET /v1/browse/new-releases` para apps nuevas de desarrollo; la pantalla
+  **Novedades** muestra los lanzamientos del año vía búsqueda (`q=year:2026&type=album`).
+- Los endpoints de guardar canciones pasaron a ser los genéricos `PUT/DELETE /me/library` con URIs.
+- La búsqueda en la API quedó limitada a **10 resultados**; la app ya la usa así.
 - El token se refresca automáticamente antes de vencer.
 
 ---
@@ -195,8 +203,8 @@ OkHttp, kotlinx.serialization, Coil, Custom Tabs.
 - `PUT /v1/me/player/play`, `PUT /v1/me/player/pause`
 - `POST /v1/me/player/next`, `POST /v1/me/player/previous`
 - `PUT /v1/me/player/seek`, `PUT /v1/me/player/shuffle`, `PUT /v1/me/player/repeat`
-- `GET /v1/me/tracks/contains`, `PUT/DELETE /v1/me/tracks`
-- `GET /v1/search`, `GET /v1/browse/new-releases`, `GET /v1/me`
+- `GET /v1/me/library/contains`, `PUT/DELETE /v1/me/library`
+- `GET /v1/search`, `GET /v1/me`
 - `GET https://lrclib.net/api/get` y `/api/search`
 
 ---

@@ -32,6 +32,5 @@ data class Playback(
 data class Profile(
     val id: String,
     val displayName: String,
-    val product: String,
     val imageUrl: String?,
 )

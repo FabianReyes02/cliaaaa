@@ -259,11 +259,7 @@ private fun AccountCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = when (profile?.product) {
-                            "premium" -> "Premium · control total del reproductor"
-                            "free" -> "Free · reproducción limitada por Spotify"
-                            else -> "Cuenta conectada"
-                        },
+                        text = "Cuenta conectada · Spotify Web API",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -280,7 +276,7 @@ private fun AccountCard(
             }
         } else {
             Text(
-                text = "Para controlar Spotify necesitás un Client ID gratuito. Es el mismo flujo PKCE que usa cualquier app móvil: no se guarda ningún client secret.",
+                text = "Necesitás un Client ID gratuito. Desde feb-2026, Spotify exige que el dueño de la app tenga Premium activo para que la app funcione.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -41,12 +41,12 @@ class SpotifyAuth(
         private const val AUTHORIZE_URL = "https://accounts.spotify.com/authorize"
         private const val TOKEN_URL = "https://accounts.spotify.com/api/token"
 
+        // user-read-private / user-read-email dropped: GET /me no longer returns
+        // product/email for development-mode apps (Feb 2026 changes).
         val SCOPES = listOf(
             "user-read-playback-state",
             "user-modify-playback-state",
             "user-read-currently-playing",
-            "user-read-private",
-            "user-read-email",
             "user-library-read",
             "user-library-modify",
         )

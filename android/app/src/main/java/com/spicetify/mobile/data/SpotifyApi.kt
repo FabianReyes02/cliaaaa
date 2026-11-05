@@ -66,21 +66,25 @@ class SpotifyApi(
     suspend fun setRepeat(state: String) = putEmpty("/me/player/repeat?state=$state")
 
     // --------------------------------------------------------------- library
+    // Since Feb 2026, content-specific endpoints (/me/tracks/*) were replaced
+    // by the generic library endpoints that take Spotify URIs.
 
     suspend fun isSaved(trackId: String): Boolean {
-        val body = get("/me/tracks/contains?ids=$trackId") ?: return false
+        val uri = trackUri(trackId)
+        val body = get("/me/library/contains?uris=$uri") ?: return false
         return runCatching { json.decodeFromString<List<Boolean>>(body).firstOrNull() ?: false }
             .getOrDefault(false)
     }
 
-    suspend fun saveTrack(trackId: String) = putEmpty("/me/tracks?ids=$trackId")
+    suspend fun saveTrack(trackId: String) = putJson("/me/library", libraryBody(trackId))
 
-    suspend fun removeSavedTrack(trackId: String) = deleteEmpty("/me/tracks?ids=$trackId")
+    suspend fun removeSavedTrack(trackId: String) = deleteJson("/me/library", libraryBody(trackId))
 
     // ------------------------------------------------------------ discovery
 
     suspend fun searchTracks(query: String): List<Track> {
-        val url = url("/search", mapOf("q" to query, "type" to "track", "limit" to "25"))
+        // February 2026 changes: /search caps limit at 10 for development-mode apps.
+        val url = url("/search", mapOf("q" to query, "type" to "track", "limit" to "10"))
         val body = get(url) ?: return emptyList()
         return json.decodeFromString<SearchDto>(body)
             .tracks?.items
@@ -89,8 +93,12 @@ class SpotifyApi(
     }
 
     suspend fun newReleases(): List<Album> {
-        val body = get("/browse/new-releases?limit=20") ?: return emptyList()
-        return json.decodeFromString<NewReleasesDto>(body)
+        // /browse/new-releases was removed for new development-mode apps (Feb 2026).
+        // Approximate it with a search for albums of the current year.
+        val year = java.time.LocalDate.now().year
+        val url = url("/search", mapOf("q" to "year:$year", "type" to "album", "limit" to "10"))
+        val body = get(url) ?: return emptyList()
+        return json.decodeFromString<SearchAlbumsDto>(body)
             .albums?.items
             .orEmpty()
             .mapNotNull { it.toDomain() }
@@ -102,7 +110,6 @@ class SpotifyApi(
         return Profile(
             id = dto.id,
             displayName = dto.displayName ?: "Usuario de Spotify",
-            product = dto.product ?: "free",
             imageUrl = dto.images.best(),
         )
     }
@@ -123,9 +130,9 @@ class SpotifyApi(
 
     private suspend fun postEmpty(path: String) = executeMutation("POST", path, null)
 
-    private suspend fun deleteEmpty(path: String) = executeMutation("DELETE", path, null)
-
     private suspend fun putJson(path: String, body: String) = executeMutation("PUT", path, body)
+
+    private suspend fun deleteJson(path: String, body: String) = executeMutation("DELETE", path, body)
 
     private suspend fun executeMutation(method: String, path: String, body: String?) {
         val requestBody = body?.toRequestBody(JSON_MEDIA_TYPE)
@@ -182,9 +189,18 @@ class SpotifyApi(
         query.forEach { (key, value) -> builder.addQueryParameter(key, value) }
         return builder.build().toString()
     }
+
+    private fun trackUri(trackId: String): String =
+        if (trackId.startsWith("spotify:")) trackId else "spotify:track:$trackId"
+
+    private fun libraryBody(trackId: String): String =
+        json.encodeToString(LibraryRequest(listOf(trackUri(trackId))))
 }
 
 // ------------------------------------------------------------------- DTOs
+
+@Serializable
+private data class LibraryRequest(val uris: List<String>)
 
 @Serializable
 private data class PlayRequest(val uris: List<String>)
@@ -243,10 +259,10 @@ private data class ImageDto(
 private data class SearchDto(val tracks: TracksPageDto? = null)
 
 @Serializable
-private data class TracksPageDto(val items: List<TrackDto> = emptyList())
+private data class SearchAlbumsDto(val albums: AlbumsPageDto? = null)
 
 @Serializable
-private data class NewReleasesDto(val albums: AlbumsPageDto? = null)
+private data class TracksPageDto(val items: List<TrackDto> = emptyList())
 
 @Serializable
 private data class AlbumsPageDto(val items: List<AlbumDto> = emptyList())
@@ -255,7 +271,6 @@ private data class AlbumsPageDto(val items: List<AlbumDto> = emptyList())
 private data class ProfileDto(
     val id: String = "",
     @SerialName("display_name") val displayName: String? = null,
-    val product: String? = null,
     val images: List<ImageDto> = emptyList(),
 )
 

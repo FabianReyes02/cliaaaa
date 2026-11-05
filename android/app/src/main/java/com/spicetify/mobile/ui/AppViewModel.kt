@@ -38,7 +38,6 @@ data class PlaybackUi(
     val error: String? = null,
     val isSaved: Boolean = false,
     val artworkAccent: Int? = null,
-    val premium: Boolean? = null,
 )
 
 data class LyricsUiState(
@@ -424,7 +423,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private fun loadProfile() {
         viewModelScope.launch {
             _profile.value = runCatching { graph.api.profile() }.getOrNull()
-            _playback.update { it.copy(premium = _profile.value?.product == "premium") }
         }
     }
 
