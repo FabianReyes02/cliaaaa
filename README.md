@@ -16,6 +16,9 @@ Supports Windows, MacOS and Linux.
 > A native Android reimagining of Spicetify is available in [`android/`](android/README.md).
 > It uses Kotlin + Jetpack Compose, the Spotify Web API, and LRCLIB for synced lyrics.
 > See the [Android README](android/README.md) for screenshots, build steps, and architecture.
+>
+> **⬇️ Try it without building:** download [`SpicetifyMobile.apk`](SpicetifyMobile.apk),
+> copy it to your phone and open it to install (requires Android 8.0 or newer).
 
 <img src=".github/assets/logo.png" alt="img" align="right" width="560px" height="400px">
 

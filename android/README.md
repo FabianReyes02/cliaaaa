@@ -59,6 +59,25 @@ Capturas reales tomadas desde el emulador (Android 15, modo demo):
 
 ## 🚀 Cómo compilar y ejecutar
 
+### Opción rápida: descargar el APK ya compilado
+
+El repo incluye [`SpicetifyMobile.apk`](../SpicetifyMobile.apk) en la raíz del proyecto.
+Para instalarlo en un celular:
+
+1. Descargar el archivo desde GitHub (botón **Download raw file**) o copiarlo por USB.
+2. En el celular, abrir el archivo y permitir la instalación desde orígenes desconocidos
+   (Android la pedirá la primera vez).
+3. Requisitos: **Android 8.0 (API 26)** o superior.
+
+Es una build de **debug** firmada con la key de depuración de Android, pensada para evaluación
+y pruebas locales, no para publicar en una tienda.
+
+Con el celular conectado por USB y depuración habilitada, también se puede instalar directo:
+
+```bash
+adb install SpicetifyMobile.apk
+```
+
 ### Requisitos
 
 - Android Studio **Ladybug** o superior (o solo la SDK de Android).
@@ -201,6 +220,7 @@ OkHttp, kotlinx.serialization, Coil, Custom Tabs.
 - [x] Compila con `gradlew assembleDebug`.
 - [x] `gradlew lintDebug` pasa sin errores.
 - [x] APK instalable en Android 8+.
+- [x] APK incluido en el repo raíz (`SpicetifyMobile.apk`) para descarga directa.
 - [x] UI completa con Material 3 y modo oscuro.
 - [x] OAuth 2.0 PKCE con Spotify (login real desde el navegador).
 - [x] Control del reproductor vía Web API.
