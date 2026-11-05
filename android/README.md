@@ -9,6 +9,8 @@ Port académico de **Spicetify CLI** a una app nativa de Android con **Kotlin + 
 > una app Android real, usando la **Web API oficial de Spotify** y **LRCLIB** para las letras.
 > No modifica, parchea ni redistribuye la APK de Spotify.
 
+📌 **¿Retomando el trabajo?** Ver [`SIGUIENTE-SESION.md`](SIGUIENTE-SESION.md) (estado, pendientes y trampas conocidas).
+
 ---
 
 ## ✨ Funcionalidades
