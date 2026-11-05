@@ -11,6 +11,12 @@
 Command-line tool to customize the official Spotify client.
 Supports Windows, MacOS and Linux.
 
+> ### 📱 Android port (student project)
+>
+> A native Android reimagining of Spicetify is available in [`android/`](android/README.md).
+> It uses Kotlin + Jetpack Compose, the Spotify Web API, and LRCLIB for synced lyrics.
+> See the [Android README](android/README.md) for screenshots, build steps, and architecture.
+
 <img src=".github/assets/logo.png" alt="img" align="right" width="560px" height="400px">
 
 ### Features
